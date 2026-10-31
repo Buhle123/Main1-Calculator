@@ -26,7 +26,7 @@ npm run test:e2e    # browser tests (needs Playwright and Chromium)
 
 For the end-to-end tests, run `npm ci` and then `npx playwright install chromium` once. Requires Node 22 or newer.
 
-## Project structure
+## The Project structure
 
 ```
 index.html            Page markup

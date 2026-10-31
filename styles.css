@@ -64,7 +64,7 @@ body {
   font-family: var(--font-keys);
 }
 
-/* ---- Body of the calculator ---- */
+/* ---- Calculator Body ---- */
 
 .calculator {
   width: min(100%, 380px);
