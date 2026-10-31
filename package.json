@@ -1,0 +1,17 @@
+{
+  "name": "desk-calculator",
+  "version": "1.0.0",
+  "description": "A tactile desk calculator for the browser.",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test \"tests/unit/**/*.test.js\"",
+    "test:e2e": "node --test \"tests/e2e/**/*.test.js\""
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  }
+}
