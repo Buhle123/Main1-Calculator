@@ -1,0 +1,273 @@
+:root {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --page-bg: #3b3631;
+  --body-bg: #26221f;
+  --body-edge: #17140f;
+  --display-bg: #15120f;
+
+  /* Text */
+  --text: #f3eadc;
+  --text-muted: #b0a598; /* >= 4.5:1 on the page, body and display */
+  --text-on-accent: #24160a;
+
+  /* Key tiers: face, bottom edge, label */
+  --digit-face: #403a35;
+  --digit-edge: #1d1a17;
+  --function-face: #2f2a26;
+  --function-edge: #171412;
+  --function-text: #c9bcab;
+  --operator-face: #c4701d;
+  --operator-edge: #7a430c;
+  --equals-face: #ffb04a;
+  --equals-edge: #b86d12;
+
+  --focus-ring: #ffd08a;
+
+  /* Type */
+  --font-display: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-keys: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Spacing and shape */
+  --gutter: 16px;
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-body: 28px;
+  --radius-display: 16px;
+  --radius-key: 16px;
+  --key-height: 64px;
+  --result-height: 4.25rem; /* fixed, so the keys never move as the text changes size */
+  --key-depth: 4px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--gutter);
+  background: radial-gradient(120% 90% at 50% 0%, #4a433d 0%, var(--page-bg) 60%);
+  color: var(--text);
+  font-family: var(--font-keys);
+}
+
+/* ---- Body of the calculator ---- */
+
+.calculator {
+  width: min(100%, 380px);
+  padding: var(--space-3);
+  border-radius: var(--radius-body);
+  background: linear-gradient(180deg, #302b27 0%, var(--body-bg) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 1px 0 var(--body-edge),
+    0 24px 40px -8px rgba(0, 0, 0, 0.55),
+    0 8px 14px rgba(0, 0, 0, 0.3);
+}
+
+.calculator__badge {
+  margin: 0 var(--space-1) var(--space-2);
+  font: 600 0.7rem/1 var(--font-keys);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.calculator__badge span {
+  color: var(--equals-face);
+}
+
+/* ---- Recessed display ---- */
+
+.display {
+  margin-bottom: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-display);
+  background: var(--display-bg);
+  box-shadow:
+    inset 0 3px 8px rgba(0, 0, 0, 0.75),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    0 1px 0 rgba(255, 255, 255, 0.08);
+  text-align: right;
+  overflow: hidden;
+}
+
+.display__expression {
+  min-height: 1.4em;
+  font: 500 0.95rem/1.4 var(--font-display);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.display__result {
+  height: var(--result-height);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font: 700 3.25rem/1.3 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  white-space: nowrap;
+  transition: font-size 120ms ease;
+}
+
+.display__result[data-size="lg"] { font-size: 2.6rem; }
+.display__result[data-size="md"] { font-size: 2.1rem; }
+.display__result[data-size="xs"] { font-size: 1.6rem; }
+
+.display__result.is-error {
+  font: 500 1.05rem/1.3 var(--font-keys);
+  color: var(--equals-face);
+  white-space: normal;
+  text-align: right;
+  transition: none; /* otherwise the long message wraps at the old, huge size mid-transition */
+}
+
+/* ---- Keys ---- */
+
+.keys {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+}
+
+.key {
+  --face: var(--digit-face);
+  --edge: var(--digit-edge);
+  --label: var(--text);
+
+  height: var(--key-height);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-key);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--face), white 7%), var(--face));
+  color: var(--label);
+  font: 600 1.4rem/1 var(--font-keys);
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 var(--key-depth) 0 var(--edge),
+    0 calc(var(--key-depth) + 6px) 12px rgba(0, 0, 0, 0.35);
+  transition: transform 80ms ease, box-shadow 80ms ease, filter 120ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.key:hover {
+  filter: brightness(1.08);
+}
+
+.key:active,
+.key.is-pressed {
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 1px 0 var(--edge),
+    0 3px 5px rgba(0, 0, 0, 0.35);
+}
+
+.key:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.key:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  filter: none;
+}
+
+.key--wide {
+  grid-column: span 2;
+}
+
+.key--function {
+  --face: var(--function-face);
+  --edge: var(--function-edge);
+  --label: var(--function-text);
+  font-size: 1.2rem;
+}
+
+.key--operator {
+  --face: var(--operator-face);
+  --edge: var(--operator-edge);
+  --label: #fff3e2;
+  font-size: 1.7rem;
+}
+
+.key--operator.is-active {
+  --face: #ffe3b8;
+  --label: var(--text-on-accent);
+  box-shadow:
+    inset 0 0 0 2px var(--equals-face),
+    0 var(--key-depth) 0 var(--operator-edge),
+    0 calc(var(--key-depth) + 6px) 12px rgba(0, 0, 0, 0.35);
+}
+
+.key--operator.is-active:active,
+.key--operator.is-active.is-pressed {
+  box-shadow:
+    inset 0 0 0 2px var(--equals-face),
+    0 1px 0 var(--operator-edge),
+    0 3px 5px rgba(0, 0, 0, 0.35);
+}
+
+.key--equals {
+  --face: var(--equals-face);
+  --edge: var(--equals-edge);
+  --label: var(--text-on-accent);
+  font-size: 1.9rem;
+  font-weight: 700;
+}
+
+/* ---- Footer hint ---- */
+
+.hint {
+  max-width: 380px;
+  font-size: 0.75rem;
+  line-height: 1.9;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.hint span {
+  display: inline-block;
+  margin: 0 var(--space-1);
+  white-space: nowrap;
+}
+
+.hint kbd {
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  font: 500 0.72rem var(--font-display);
+  color: var(--function-text);
+}
+
+@media (max-width: 380px) {
+  .calculator { padding: var(--space-2); }
+  .keys { gap: var(--space-1); }
+  .key { height: 60px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .key,
+  .display__result {
+    transition: none;
+  }
+}
